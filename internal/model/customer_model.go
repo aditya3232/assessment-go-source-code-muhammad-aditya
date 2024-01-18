@@ -15,8 +15,8 @@ type CreateCustomerRequest struct {
 
 type UpdateCustomerRequest struct {
 	ID            string `json:"-" validate:"required,max=100,uuid"`
-	Name          string `json:"name" validate:"required,max=255"`
-	DetailAddress string `json:"detail_address" validate:"required,max=255"`
+	Name          string `json:"name" validate:"max=255"`
+	DetailAddress string `json:"detail_address" validate:"max=255"`
 }
 
 type SearchCustomerRequest struct {

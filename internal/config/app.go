@@ -24,16 +24,20 @@ type BootstrapConfig struct {
 func Bootstrap(config *BootstrapConfig) {
 	// setup repositories
 	customerRepository := repository.NewCustomerRepository(config.Log)
+	itemRepository := repository.NewItemRepository(config.Log)
 
 	// setup use cases
 	customerUseCase := usecase.NewCustomerUseCase(config.DB, config.Log, config.Validate, customerRepository)
+	itemUseCase := usecase.NewItemUseCase(config.DB, config.Log, config.Validate, itemRepository)
 
 	// setup controller
 	customerController := http.NewCustomerController(customerUseCase, config.Log)
+	itemController := http.NewItemController(itemUseCase, config.Log)
 
 	routeConfig := route.RouteConfig{
 		App:                config.App,
 		CustomerController: customerController,
+		ItemController:     itemController,
 	}
 	routeConfig.Setup()
 }
