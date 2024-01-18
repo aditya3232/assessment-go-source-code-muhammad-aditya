@@ -42,9 +42,21 @@ func (c *ItemUseCase) Create(ctx context.Context, request *model.CreateItemReque
 
 	item := &entity.Item{
 		ID:        uuid.New().String(),
+		ItemCode:  request.ItemCode,
 		ItemName:  request.ItemName,
 		Type:      request.Type,
 		ItemPrice: request.ItemPrice,
+	}
+
+	totalItemCode, err := c.ItemRepository.CountByItemCode(tx, item)
+	if err != nil {
+		c.Log.Warnf("Failed count user from database : %+v", err)
+		return nil, fiber.ErrInternalServerError
+	}
+
+	if totalItemCode > 0 {
+		c.Log.Warnf("item already exists : %+v", err)
+		return nil, fiber.ErrConflict
 	}
 
 	if err := c.ItemRepository.Create(tx, item); err != nil {

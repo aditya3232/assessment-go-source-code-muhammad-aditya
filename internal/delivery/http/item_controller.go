@@ -40,6 +40,7 @@ func (c *ItemController) Create(ctx *fiber.Ctx) error {
 func (c *ItemController) List(ctx *fiber.Ctx) error {
 
 	request := &model.SearchItemRequest{
+		ItemCode:  ctx.QueryInt("item_code", 0),
 		ItemName:  ctx.Query("item_name", ""),
 		Type:      ctx.Query("type", ""),
 		ItemPrice: ctx.QueryInt("item_price", 0),

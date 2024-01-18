@@ -8,6 +8,7 @@ import (
 func ItemToResponse(item *entity.Item) *model.ItemResponse {
 	return &model.ItemResponse{
 		ID:        item.ID,
+		ItemCode:  item.ItemCode,
 		ItemName:  item.ItemName,
 		Type:      item.Type,
 		ItemPrice: item.ItemPrice,

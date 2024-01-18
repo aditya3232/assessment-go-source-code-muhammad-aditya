@@ -19,6 +19,12 @@ func NewItemRepository(log *logrus.Logger) *ItemRepository {
 	}
 }
 
+func (r *ItemRepository) CountByItemCode(db *gorm.DB, item *entity.Item) (int64, error) {
+	var total int64
+	err := db.Model(item).Where("item_code = ?", item.ItemCode).Count(&total).Error
+	return total, err
+}
+
 func (r *ItemRepository) Search(db *gorm.DB, request *model.SearchItemRequest) ([]entity.Item, int64, error) {
 	var items []entity.Item
 	if err := db.Scopes(r.FilterItem(request)).Offset((request.Page - 1) * request.Size).Limit(request.Size).Find(&items).Error; err != nil {
@@ -35,6 +41,10 @@ func (r *ItemRepository) Search(db *gorm.DB, request *model.SearchItemRequest) (
 
 func (r *ItemRepository) FilterItem(request *model.SearchItemRequest) func(tx *gorm.DB) *gorm.DB {
 	return func(tx *gorm.DB) *gorm.DB {
+		if item_code := request.ItemCode; item_code != 0 {
+			tx = tx.Where("item_code = ?", item_code)
+		}
+
 		if item_name := request.ItemName; item_name != "" {
 			item_name = "%" + item_name + "%"
 			tx = tx.Where("item_name LIKE ?", item_name)

@@ -2,6 +2,7 @@ package model
 
 type ItemResponse struct {
 	ID        string `json:"id"`
+	ItemCode  int64  `json:"item_code"`
 	ItemName  string `json:"item_name"`
 	Type      string `json:"type"`
 	ItemPrice int64  `json:"item_price"`
@@ -10,6 +11,7 @@ type ItemResponse struct {
 }
 
 type CreateItemRequest struct {
+	ItemCode  int64  `json:"item_code" validate:"required"`
 	ItemName  string `json:"item_name" validate:"required,max=255"`
 	Type      string `json:"type" validate:"required,max=255"`
 	ItemPrice int64  `json:"item_price" validate:"required"`
@@ -23,6 +25,7 @@ type UpdateItemRequest struct {
 }
 
 type SearchItemRequest struct {
+	ItemCode  int    `json:"item_code"`
 	ItemName  string `json:"item_name" validate:"max=255"`
 	Type      string `json:"type" validate:"max=255"`
 	ItemPrice int    `json:"item_price"`
