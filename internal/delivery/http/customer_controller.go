@@ -40,9 +40,10 @@ func (c *CustomerController) Create(ctx *fiber.Ctx) error {
 func (c *CustomerController) List(ctx *fiber.Ctx) error {
 
 	request := &model.SearchCustomerRequest{
-		Name: ctx.Query("name", ""),
-		Page: ctx.QueryInt("page", 1),
-		Size: ctx.QueryInt("size", 10),
+		NationalId: ctx.QueryInt("national_id", 0),
+		Name:       ctx.Query("name", ""),
+		Page:       ctx.QueryInt("page", 1),
+		Size:       ctx.QueryInt("size", 10),
 	}
 
 	responses, total, err := c.UseCase.Search(ctx.UserContext(), request)

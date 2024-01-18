@@ -42,8 +42,20 @@ func (c *CustomerUseCase) Create(ctx context.Context, request *model.CreateCusto
 
 	customer := &entity.Customer{
 		ID:            uuid.New().String(),
+		NationalId:    request.NationalId,
 		Name:          request.Name,
 		DetailAddress: request.DetailAddress,
+	}
+
+	totalNationalId, err := c.CustomerRepository.CountByNationalId(tx, customer)
+	if err != nil {
+		c.Log.Warnf("Failed count user from database : %+v", err)
+		return nil, fiber.ErrInternalServerError
+	}
+
+	if totalNationalId > 0 {
+		c.Log.Warnf("Customer already exists : %+v", err)
+		return nil, fiber.ErrConflict
 	}
 
 	if err := c.CustomerRepository.Create(tx, customer); err != nil {
