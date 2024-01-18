@@ -53,7 +53,7 @@ migrate create -ext sql -dir db/migrations create_table_xxx
 ### Run Migration
 
 ```shell
-migrate -database "mysql://root:root@tcp(localhost:3306)/tes_clean_architecture?charset=utf8mb4&parseTime=True&loc=Local" -path db/migrations up
+migrate -database "mysql://root:root@tcp(localhost:3306)/assessment_go_source_code_muhammad_aditya?charset=utf8mb4&parseTime=True&loc=Local" -path db/migrations up
 ```
 
 ## Run Application
