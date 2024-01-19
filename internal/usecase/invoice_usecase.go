@@ -102,3 +102,41 @@ func (c *InvoiceUseCase) Create(ctx context.Context, request *model.CreateInvoic
 
 	return converter.InvoiceToResponse(invoice), nil
 }
+
+func (c *InvoiceUseCase) Get(ctx context.Context, request *model.GetInvoiceRequest) (*model.InvoiceResponse, error) {
+	tx := c.DB.WithContext(ctx).Begin()
+	defer tx.Rollback()
+
+	if err := c.Validate.Struct(request); err != nil {
+		c.Log.WithError(err).Error("error validating request body")
+		return nil, fiber.ErrBadRequest
+	}
+
+	invoice := new(entity.Invoice)
+	if err := c.InvoiceRepository.FindById(tx, invoice, request.ID); err != nil {
+		c.Log.WithError(err).Error("error getting invoice")
+		return nil, fiber.ErrNotFound
+	}
+
+	customer := new(entity.Customer)
+	if err := c.CustomerRepository.FindById(tx, customer, invoice.CustomerId); err != nil {
+		c.Log.WithError(err).Error("failed to find customer")
+		return nil, fiber.ErrNotFound
+	}
+
+	invoiceItems := make([]entity.InvoiceItem, 0)
+	if err := c.InvoiceItemRepository.FindByInvoiceId(tx, &invoiceItems, invoice.ID); err != nil {
+		c.Log.WithError(err).Error("failed to find invoice items")
+		return nil, fiber.ErrNotFound
+	}
+
+	invoice.Customer = *customer
+	invoice.InvoiceItems = invoiceItems
+
+	if err := tx.Commit().Error; err != nil {
+		c.Log.WithError(err).Error("error getting invoice")
+		return nil, fiber.ErrInternalServerError
+	}
+
+	return converter.InvoiceToResponse(invoice), nil
+}

@@ -35,3 +35,17 @@ func (c *InvoiceController) Create(ctx *fiber.Ctx) error {
 
 	return ctx.JSON(model.WebResponse[*model.InvoiceResponse]{Data: response})
 }
+
+func (c *InvoiceController) Get(ctx *fiber.Ctx) error {
+	request := &model.GetInvoiceRequest{
+		ID: ctx.Params("invoiceId"),
+	}
+
+	response, err := c.UseCase.Get(ctx.UserContext(), request)
+	if err != nil {
+		c.Log.WithError(err).Error("error getting invoice")
+		return err
+	}
+
+	return ctx.JSON(model.WebResponse[*model.InvoiceResponse]{Data: response})
+}

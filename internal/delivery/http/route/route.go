@@ -49,4 +49,5 @@ func (c *RouteConfig) SetupGuestRoute() {
 	c.App.Delete("/api/items/:itemId", c.ItemController.Delete)
 
 	c.App.Post("/api/invoices", c.InvoiceController.Create)
+	c.App.Get("/api/invoices/:invoiceId", c.InvoiceController.Get)
 }

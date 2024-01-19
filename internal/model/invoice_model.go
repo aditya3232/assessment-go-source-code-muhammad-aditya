@@ -27,3 +27,7 @@ type CreateInvoiceRequest struct {
 	Status        string                     `json:"status" validate:"required"`
 	InvoiceItems  []CreateInvoiceItemRequest `json:"invoice_items"`
 }
+
+type GetInvoiceRequest struct {
+	ID string `json:"-" validate:"required,max=100,uuid"`
+}
