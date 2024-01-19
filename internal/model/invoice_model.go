@@ -29,7 +29,7 @@ type InvoiceListResponse struct {
 
 type CreateInvoiceRequest struct {
 	InvoiceNumber string                     `json:"invoice_number" validate:"required,max=255"`
-	CustomerId    string                     `json:"customer_id" validate:"required,max=255"` //ambil dari parameter route
+	CustomerId    string                     `json:"customer_id" validate:"required,max=255"`
 	Subject       string                     `json:"subject" validate:"required,max=255"`
 	IssuedDate    int64                      `json:"issued_date" validate:"required"`
 	DueDate       int64                      `json:"due_date" validate:"required"`
@@ -38,6 +38,19 @@ type CreateInvoiceRequest struct {
 	GrandTotal    int64                      `json:"grand_total" validate:"required"`
 	Status        string                     `json:"status" validate:"required"`
 	InvoiceItems  []CreateInvoiceItemRequest `json:"invoice_items"`
+}
+
+type UpdateInvoiceRequest struct {
+	ID           string                     `json:"-" validate:"required,max=100,uuid"`
+	CustomerId   string                     `json:"customer_id" validate:"required,max=255"`
+	Subject      string                     `json:"subject" validate:"required,max=255"`
+	IssuedDate   int64                      `json:"issued_date" validate:"required"`
+	DueDate      int64                      `json:"due_date" validate:"required"`
+	TotalItem    int64                      `json:"total_item" validate:"required"`
+	SubTotal     int64                      `json:"sub_total" validate:"required"`
+	GrandTotal   int64                      `json:"grand_total" validate:"required"`
+	Status       string                     `json:"status" validate:"required"`
+	InvoiceItems []CreateInvoiceItemRequest `json:"invoice_items"`
 }
 
 type SearchInvoiceRequest struct {

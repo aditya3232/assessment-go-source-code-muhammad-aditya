@@ -26,3 +26,12 @@ func (c *InvoiceItemRepository) FindByInvoiceId(tx *gorm.DB, invoiceItem *[]enti
 
 	return nil
 }
+
+// DeleteByInvoiceId
+func (c *InvoiceItemRepository) DeleteByInvoiceId(tx *gorm.DB, invoiceId string) error {
+	if err := tx.Where("invoice_id = ?", invoiceId).Delete(&entity.InvoiceItem{}).Error; err != nil {
+		return err
+	}
+
+	return nil
+}

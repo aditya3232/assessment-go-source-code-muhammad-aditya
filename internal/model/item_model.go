@@ -17,8 +17,8 @@ type CreateItemRequest struct {
 
 type UpdateItemRequest struct {
 	ID       string `json:"-" validate:"required,max=100,uuid"`
-	ItemName string `json:"item_name" validate:"max=255"`
-	Type     string `json:"type" validate:"max=255"`
+	ItemName string `json:"item_name" validate:"required,max=255"`
+	Type     string `json:"type" validate:"required,max=255"`
 }
 
 type SearchItemRequest struct {

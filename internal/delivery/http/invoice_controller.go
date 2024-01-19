@@ -111,3 +111,21 @@ func (c *InvoiceController) List(ctx *fiber.Ctx) error {
 		Paging: paging,
 	})
 }
+
+func (c *InvoiceController) Update(ctx *fiber.Ctx) error {
+	request := new(model.UpdateInvoiceRequest)
+	if err := ctx.BodyParser(request); err != nil {
+		c.Log.WithError(err).Error("error parsing request body")
+		return fiber.ErrBadRequest
+	}
+
+	request.ID = ctx.Params("invoiceId")
+
+	response, err := c.UseCase.Update(ctx.UserContext(), request)
+	if err != nil {
+		c.Log.WithError(err).Error("error updating invoice")
+		return err
+	}
+
+	return ctx.JSON(model.WebResponse[*model.InvoiceResponse]{Data: response})
+}

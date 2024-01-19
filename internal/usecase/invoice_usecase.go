@@ -183,3 +183,75 @@ func (c *InvoiceUseCase) Search(ctx context.Context, request *model.SearchInvoic
 
 	return responses, total, nil
 }
+
+func (c *InvoiceUseCase) Update(ctx context.Context, request *model.UpdateInvoiceRequest) (*model.InvoiceResponse, error) {
+	tx := c.DB.WithContext(ctx).Begin()
+	defer tx.Rollback()
+
+	if err := c.Validate.Struct(request); err != nil {
+		c.Log.WithError(err).Error("error validating request body")
+		return nil, fiber.ErrBadRequest
+	}
+
+	invoice := new(entity.Invoice)
+	if err := c.InvoiceRepository.FindById(tx, invoice, request.ID); err != nil {
+		c.Log.WithError(err).Error("error getting invoice")
+		return nil, fiber.ErrNotFound
+	}
+
+	customer := new(entity.Customer)
+	if err := c.CustomerRepository.FindById(tx, customer, request.CustomerId); err != nil {
+		c.Log.WithError(err).Error("error getting customer")
+		return nil, fiber.ErrNotFound
+	}
+
+	invoice.CustomerId = customer.ID
+	invoice.Subject = request.Subject
+	invoice.IssuedDate = request.IssuedDate
+	invoice.DueDate = request.DueDate
+	invoice.TotalItem = request.TotalItem
+	invoice.SubTotal = request.SubTotal
+	invoice.GrandTotal = request.GrandTotal
+	invoice.Status = request.Status
+	invoice.Customer = *customer
+
+	if err := c.InvoiceRepository.Update(tx, invoice); err != nil {
+		c.Log.WithError(err).Error("error updating invoice")
+		return nil, fiber.ErrInternalServerError
+	}
+
+	// delete and add new data
+	if err := c.InvoiceItemRepository.DeleteByInvoiceId(tx, invoice.ID); err != nil {
+		c.Log.WithError(err).Error("error deleting invoice items")
+		return nil, fiber.ErrInternalServerError
+	}
+
+	invoiceItems := make([]entity.InvoiceItem, len(request.InvoiceItems))
+	for i, itemRequest := range request.InvoiceItems {
+		itemId := uuid.New().String()
+		invoiceItems[i] = entity.InvoiceItem{
+			ID:           itemId,
+			InvoiceId:    invoice.ID,
+			ItemId:       itemRequest.ItemId,
+			ItemPrice:    itemRequest.ItemPrice,
+			ItemQuantity: itemRequest.ItemQuantity,
+			Amount:       itemRequest.Amount,
+		}
+	}
+
+	for _, item := range invoiceItems {
+		if err := c.InvoiceItemRepository.Create(tx, &item); err != nil {
+			c.Log.WithError(err).Error("error creating invoice items")
+			return nil, fiber.ErrInternalServerError
+		}
+	}
+
+	invoice.InvoiceItems = invoiceItems
+
+	if err := tx.Commit().Error; err != nil {
+		c.Log.WithError(err).Error("error updating invoice")
+		return nil, fiber.ErrInternalServerError
+	}
+
+	return converter.InvoiceToResponse(invoice), nil
+}
