@@ -25,19 +25,24 @@ func Bootstrap(config *BootstrapConfig) {
 	// setup repositories
 	customerRepository := repository.NewCustomerRepository(config.Log)
 	itemRepository := repository.NewItemRepository(config.Log)
+	invoiceRepository := repository.NewInvoiceRepository(config.Log)
+	invoiceItemRepository := repository.NewInvoiceItemRepository(config.Log)
 
 	// setup use cases
 	customerUseCase := usecase.NewCustomerUseCase(config.DB, config.Log, config.Validate, customerRepository)
 	itemUseCase := usecase.NewItemUseCase(config.DB, config.Log, config.Validate, itemRepository)
+	invoiceUseCase := usecase.NewInvoiceUseCase(config.DB, config.Log, config.Validate, invoiceRepository, customerRepository, invoiceItemRepository)
 
 	// setup controller
 	customerController := http.NewCustomerController(customerUseCase, config.Log)
 	itemController := http.NewItemController(itemUseCase, config.Log)
+	invoiceController := http.NewInvoiceController(invoiceUseCase, config.Log)
 
 	routeConfig := route.RouteConfig{
 		App:                config.App,
 		CustomerController: customerController,
 		ItemController:     itemController,
+		InvoiceController:  invoiceController,
 	}
 	routeConfig.Setup()
 }

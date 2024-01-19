@@ -50,10 +50,6 @@ func (r *ItemRepository) FilterItem(request *model.SearchItemRequest) func(tx *g
 			tx = tx.Where("item_name LIKE ?", item_name)
 		}
 
-		if item_price := request.ItemPrice; item_price != 0 {
-			tx = tx.Where("item_price = ?", item_price)
-		}
-
 		if item_type := request.Type; item_type != "" {
 			item_type = "%" + item_type + "%"
 			tx = tx.Where("type LIKE ?", item_type)

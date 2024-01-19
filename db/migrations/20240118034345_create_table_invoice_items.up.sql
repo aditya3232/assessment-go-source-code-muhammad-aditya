@@ -3,6 +3,7 @@ create table invoice_items
     id              varchar(255) not null,
     invoice_id      varchar(255) not null,
     item_id         varchar(255) not null,
+    item_price      int          not null,
     item_quantity   int          not null,
     amount          bigint       not null,
     created_at      bigint       not null,

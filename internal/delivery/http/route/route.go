@@ -12,6 +12,7 @@ type RouteConfig struct {
 	App                *fiber.App
 	CustomerController *http.CustomerController
 	ItemController     *http.ItemController
+	InvoiceController  *http.InvoiceController
 }
 
 func (c *RouteConfig) Setup() {
@@ -46,4 +47,6 @@ func (c *RouteConfig) SetupGuestRoute() {
 	c.App.Put("/api/items/:itemId", c.ItemController.Update)
 	c.App.Get("/api/items/:itemId", c.ItemController.Get)
 	c.App.Delete("/api/items/:itemId", c.ItemController.Delete)
+
+	c.App.Post("/api/invoices", c.InvoiceController.Create)
 }

@@ -40,12 +40,11 @@ func (c *ItemController) Create(ctx *fiber.Ctx) error {
 func (c *ItemController) List(ctx *fiber.Ctx) error {
 
 	request := &model.SearchItemRequest{
-		ItemCode:  ctx.QueryInt("item_code", 0),
-		ItemName:  ctx.Query("item_name", ""),
-		Type:      ctx.Query("type", ""),
-		ItemPrice: ctx.QueryInt("item_price", 0),
-		Page:      ctx.QueryInt("page", 1),
-		Size:      ctx.QueryInt("size", 10),
+		ItemCode: ctx.QueryInt("item_code", 0),
+		ItemName: ctx.Query("item_name", ""),
+		Type:     ctx.Query("type", ""),
+		Page:     ctx.QueryInt("page", 1),
+		Size:     ctx.QueryInt("size", 10),
 	}
 
 	responses, total, err := c.UseCase.Search(ctx.UserContext(), request)

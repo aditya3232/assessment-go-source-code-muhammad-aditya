@@ -41,11 +41,10 @@ func (c *ItemUseCase) Create(ctx context.Context, request *model.CreateItemReque
 	}
 
 	item := &entity.Item{
-		ID:        uuid.New().String(),
-		ItemCode:  request.ItemCode,
-		ItemName:  request.ItemName,
-		Type:      request.Type,
-		ItemPrice: request.ItemPrice,
+		ID:       uuid.New().String(),
+		ItemCode: request.ItemCode,
+		ItemName: request.ItemName,
+		Type:     request.Type,
 	}
 
 	totalItemCode, err := c.ItemRepository.CountByItemCode(tx, item)
@@ -89,7 +88,6 @@ func (c *ItemUseCase) Update(ctx context.Context, request *model.UpdateItemReque
 
 	item.ItemName = request.ItemName
 	item.Type = request.Type
-	item.ItemPrice = request.ItemPrice
 
 	if err := c.ItemRepository.Update(tx, item); err != nil {
 		c.Log.WithError(err).Error("error updating item")
