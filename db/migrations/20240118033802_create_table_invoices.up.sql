@@ -6,6 +6,7 @@ create table invoices
     subject         varchar(255) not null,
     issued_date     bigint       not null,
     due_date        bigint       not null,
+    total_item      bigint       not null,
     sub_total       bigint       not null,
     grand_total     bigint       not null,
     status          varchar(255) not null,

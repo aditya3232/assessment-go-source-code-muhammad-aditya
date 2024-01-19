@@ -50,4 +50,5 @@ func (c *RouteConfig) SetupGuestRoute() {
 
 	c.App.Post("/api/invoices", c.InvoiceController.Create)
 	c.App.Get("/api/invoices/:invoiceId", c.InvoiceController.Get)
+	c.App.Get("/api/invoices", c.InvoiceController.List)
 }

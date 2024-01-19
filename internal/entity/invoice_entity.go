@@ -7,6 +7,7 @@ type Invoice struct {
 	Subject       string        `gorm:"column:subject"`
 	IssuedDate    int64         `gorm:"column:issued_date"`
 	DueDate       int64         `gorm:"column:due_date"`
+	TotalItem     int64         `gorm:"column:total_item"`
 	SubTotal      int64         `gorm:"column:sub_total"`
 	GrandTotal    int64         `gorm:"column:grand_total"`
 	Status        string        `gorm:"column:status"`

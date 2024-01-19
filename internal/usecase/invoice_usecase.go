@@ -72,6 +72,7 @@ func (c *InvoiceUseCase) Create(ctx context.Context, request *model.CreateInvoic
 		Subject:       request.Subject,
 		IssuedDate:    request.IssuedDate,
 		DueDate:       request.DueDate,
+		TotalItem:     request.TotalItem,
 		SubTotal:      request.SubTotal,
 		GrandTotal:    request.GrandTotal,
 		Status:        request.Status,
@@ -139,4 +140,46 @@ func (c *InvoiceUseCase) Get(ctx context.Context, request *model.GetInvoiceReque
 	}
 
 	return converter.InvoiceToResponse(invoice), nil
+}
+
+func (c *InvoiceUseCase) Search(ctx context.Context, request *model.SearchInvoiceRequest) ([]model.InvoiceListResponse, int64, error) {
+	tx := c.DB.WithContext(ctx).Begin()
+	defer tx.Rollback()
+
+	if err := c.Validate.Struct(request); err != nil {
+		c.Log.WithError(err).Error("error validating request body")
+		return nil, 0, fiber.ErrBadRequest
+	}
+
+	invoices, total, err := c.InvoiceRepository.Search(tx, request)
+	if err != nil {
+		c.Log.WithError(err).Error("error getting invoices")
+		return nil, 0, fiber.ErrInternalServerError
+	}
+
+	customerIds := make([]string, len(invoices))
+	for i, invoice := range invoices {
+		customerIds[i] = invoice.CustomerId
+	}
+
+	responses := make([]model.InvoiceListResponse, len(invoices))
+	for i, invoice := range invoices {
+		customer := new(entity.Customer)
+
+		if err := c.CustomerRepository.FindById(tx, customer, customerIds[i]); err != nil {
+			c.Log.WithError(err).Error("error getting customer name")
+			return []model.InvoiceListResponse{}, 0, fiber.ErrNotFound
+		}
+
+		response := converter.InvoiceListToResponse(&invoice)
+		response.CustomerName = customer.Name
+		responses[i] = *response
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		c.Log.WithError(err).Error("error getting invoices")
+		return nil, 0, fiber.ErrInternalServerError
+	}
+
+	return responses, total, nil
 }
