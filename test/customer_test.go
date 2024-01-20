@@ -15,7 +15,7 @@ import (
 )
 
 func TestCreateCustomer(t *testing.T) {
-	ClearCustomer()
+	ClearAll()
 	requestBody := model.CreateCustomerRequest{
 		NationalId:    18071999,
 		Name:          "Muhammad Aditya",
@@ -48,7 +48,8 @@ func TestCreateCustomer(t *testing.T) {
 }
 
 func TestCreateCustomerFailed(t *testing.T) {
-	ClearCustomer()
+	ClearAll()
+
 	requestBody := model.CreateCustomerRequest{
 		NationalId: 18071999,
 		// Name:          "Muhammad Aditya",
@@ -75,7 +76,7 @@ func TestCreateCustomerFailed(t *testing.T) {
 }
 
 func TestListCustomer(t *testing.T) {
-	ClearCustomer()
+	ClearAll()
 	CreateCustomers(t, 5)
 
 	request := httptest.NewRequest(http.MethodGet, "/api/customers/", nil)
@@ -96,7 +97,7 @@ func TestListCustomer(t *testing.T) {
 }
 
 func TestListCustomerFailed(t *testing.T) {
-	ClearCustomer()
+	ClearAll()
 
 	request := httptest.NewRequest(http.MethodGet, "/api/customer/", nil)
 	request.Header.Set("Accept", "application/json")
@@ -115,7 +116,8 @@ func TestListCustomerFailed(t *testing.T) {
 }
 
 func TestGetCustomer(t *testing.T) {
-	ClearCustomer()
+	ClearAll()
+
 	CreateCustomers(t, 5)
 	customer := GetFirstCustomer(t)
 
@@ -142,7 +144,8 @@ func TestGetCustomer(t *testing.T) {
 }
 
 func TestGetCustomerFailed(t *testing.T) {
-	ClearCustomer()
+	ClearAll()
+
 	CreateCustomers(t, 5)
 	uuid := "e8cc8ec6-5a9c-4cde-9e52-b435d15bb936"
 
@@ -163,7 +166,8 @@ func TestGetCustomerFailed(t *testing.T) {
 }
 
 func TestUpdateCustomer(t *testing.T) {
-	ClearCustomer()
+	ClearAll()
+
 	CreateCustomers(t, 5)
 	customer := GetFirstCustomer(t)
 
@@ -199,7 +203,8 @@ func TestUpdateCustomer(t *testing.T) {
 }
 
 func TestUpdateCustomerFailed(t *testing.T) {
-	ClearCustomer()
+	ClearAll()
+
 	CreateCustomers(t, 5)
 	uuid := "e8cc8ec6-5a9c-4cde-9e52-b435d15bb936"
 
@@ -223,7 +228,8 @@ func TestUpdateCustomerFailed(t *testing.T) {
 }
 
 func TestDeleteCustomer(t *testing.T) {
-	ClearCustomer()
+	ClearAll()
+
 	CreateCustomers(t, 5)
 	customer := GetFirstCustomer(t)
 
@@ -237,7 +243,8 @@ func TestDeleteCustomer(t *testing.T) {
 }
 
 func TestDeleteCustomerFailed(t *testing.T) {
-	ClearCustomer()
+	ClearAll()
+
 	CreateCustomers(t, 5)
 	uuid := "e8cc8ec6-5a9c-4cde-9e52-b435d15bb936"
 
@@ -251,7 +258,7 @@ func TestDeleteCustomerFailed(t *testing.T) {
 }
 
 func TestCreateCustomerBigData(t *testing.T) {
-	ClearCustomer()
+	ClearAll()
 
 	start := time.Now()
 

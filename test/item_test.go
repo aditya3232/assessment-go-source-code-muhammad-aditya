@@ -15,7 +15,8 @@ import (
 )
 
 func TestCreateItem(t *testing.T) {
-	ClearItem()
+	ClearAll()
+
 	requestBody := model.CreateItemRequest{
 		ItemCode: 121314,
 		ItemName: "printer",
@@ -48,7 +49,8 @@ func TestCreateItem(t *testing.T) {
 }
 
 func TestCreateItemFailed(t *testing.T) {
-	ClearItem()
+	ClearAll()
+
 	requestBody := model.CreateItemRequest{
 		ItemCode: 121314,
 		// ItemName: "printer",
@@ -75,7 +77,8 @@ func TestCreateItemFailed(t *testing.T) {
 }
 
 func TestListItem(t *testing.T) {
-	ClearItem()
+	ClearAll()
+
 	CreateItems(t, 5)
 
 	request := httptest.NewRequest(http.MethodGet, "/api/items/", nil)
@@ -97,7 +100,7 @@ func TestListItem(t *testing.T) {
 }
 
 func TestListItemFailed(t *testing.T) {
-	ClearItem()
+	ClearAll()
 
 	request := httptest.NewRequest(http.MethodGet, "/api/item/", nil)
 	request.Header.Set("Content-Type", "application/json")
@@ -117,7 +120,8 @@ func TestListItemFailed(t *testing.T) {
 }
 
 func TestGetItem(t *testing.T) {
-	ClearItem()
+	ClearAll()
+
 	CreateItems(t, 5)
 	item := GetFirstItem(t)
 
@@ -145,7 +149,8 @@ func TestGetItem(t *testing.T) {
 }
 
 func TestGetItemFailed(t *testing.T) {
-	ClearItem()
+	ClearAll()
+
 	CreateItems(t, 5)
 	uuid := "e8cc8ec6-5a9c-4cde-9e52-b435d15bb936"
 
@@ -167,7 +172,8 @@ func TestGetItemFailed(t *testing.T) {
 }
 
 func TestUpdateItem(t *testing.T) {
-	ClearItem()
+	ClearAll()
+
 	CreateItems(t, 5)
 	item := GetFirstItem(t)
 
@@ -202,7 +208,8 @@ func TestUpdateItem(t *testing.T) {
 }
 
 func TestUpdateItemFailed(t *testing.T) {
-	ClearItem()
+	ClearAll()
+
 	CreateItems(t, 5)
 	item := GetFirstItem(t)
 
@@ -232,7 +239,8 @@ func TestUpdateItemFailed(t *testing.T) {
 }
 
 func TestDeleteItem(t *testing.T) {
-	ClearItem()
+	ClearAll()
+
 	CreateItems(t, 5)
 	item := GetFirstItem(t)
 
@@ -246,7 +254,8 @@ func TestDeleteItem(t *testing.T) {
 }
 
 func TestDeleteItemFailed(t *testing.T) {
-	ClearItem()
+	ClearAll()
+
 	CreateItems(t, 5)
 	uuid := "e8cc8ec6-5a9c-4cde-9e52-b435d15bb936"
 
@@ -260,7 +269,7 @@ func TestDeleteItemFailed(t *testing.T) {
 }
 
 func TestCreateItemBigData(t *testing.T) {
-	ClearItem()
+	ClearAll()
 
 	start := time.Now()
 
