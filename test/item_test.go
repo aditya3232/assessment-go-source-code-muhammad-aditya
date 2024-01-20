@@ -14,17 +14,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateCustomer(t *testing.T) {
-	ClearCustomer()
-	requestBody := model.CreateCustomerRequest{
-		NationalId:    18071999,
-		Name:          "Muhammad Aditya",
-		DetailAddress: "jl.kebenaran jawa timur, malang",
+func TestCreateItem(t *testing.T) {
+	ClearItem()
+	requestBody := model.CreateItemRequest{
+		ItemCode: 121314,
+		ItemName: "printer",
+		Type:     "hardware",
 	}
 	bodyJson, err := json.Marshal(requestBody)
 	assert.Nil(t, err)
 
-	request := httptest.NewRequest(http.MethodPost, "/api/customers/", strings.NewReader(string(bodyJson)))
+	request := httptest.NewRequest(http.MethodPost, "/api/items/", strings.NewReader(string(bodyJson)))
 	request.Header.Set("Content-Type", "application/json")
 	request.Header.Set("Accept", "application/json")
 
@@ -34,30 +34,30 @@ func TestCreateCustomer(t *testing.T) {
 	bytes, err := io.ReadAll(response.Body)
 	assert.Nil(t, err)
 
-	responseBody := new(model.WebResponse[model.CustomerResponse])
+	responseBody := new(model.WebResponse[model.ItemResponse])
 	err = json.Unmarshal(bytes, responseBody)
 	assert.Nil(t, err)
 
 	assert.Equal(t, http.StatusOK, response.StatusCode)
-	assert.Equal(t, requestBody.NationalId, responseBody.Data.NationalId)
-	assert.Equal(t, requestBody.Name, responseBody.Data.Name)
-	assert.Equal(t, requestBody.DetailAddress, responseBody.Data.DetailAddress)
+	assert.Equal(t, requestBody.ItemCode, responseBody.Data.ItemCode)
+	assert.Equal(t, requestBody.ItemName, responseBody.Data.ItemName)
+	assert.Equal(t, requestBody.Type, responseBody.Data.Type)
 	assert.NotNil(t, responseBody.Data.CreatedAt)
 	assert.NotNil(t, responseBody.Data.UpdatedAt)
 	assert.NotNil(t, responseBody.Data.ID)
 }
 
-func TestCreateCustomerFailed(t *testing.T) {
-	ClearCustomer()
-	requestBody := model.CreateCustomerRequest{
-		NationalId: 18071999,
-		// Name:          "Muhammad Aditya",
-		DetailAddress: "jl.kebenaran jawa timur, malang",
+func TestCreateItemFailed(t *testing.T) {
+	ClearItem()
+	requestBody := model.CreateItemRequest{
+		ItemCode: 121314,
+		// ItemName: "printer",
+		Type: "hardware",
 	}
 	bodyJson, err := json.Marshal(requestBody)
 	assert.Nil(t, err)
 
-	request := httptest.NewRequest(http.MethodPost, "/api/customers/", strings.NewReader(string(bodyJson)))
+	request := httptest.NewRequest(http.MethodPost, "/api/items/", strings.NewReader(string(bodyJson)))
 	request.Header.Set("Content-Type", "application/json")
 	request.Header.Set("Accept", "application/json")
 
@@ -67,18 +67,19 @@ func TestCreateCustomerFailed(t *testing.T) {
 	bytes, err := io.ReadAll(response.Body)
 	assert.Nil(t, err)
 
-	responseBody := new(model.WebResponse[model.CustomerResponse])
+	responseBody := new(model.WebResponse[model.ItemResponse])
 	err = json.Unmarshal(bytes, responseBody)
 	assert.Nil(t, err)
 
 	assert.Equal(t, http.StatusBadRequest, response.StatusCode)
 }
 
-func TestListCustomer(t *testing.T) {
-	ClearCustomer()
-	CreateCustomers(t, 5)
+func TestListItem(t *testing.T) {
+	ClearItem()
+	CreateItems(t, 5)
 
-	request := httptest.NewRequest(http.MethodGet, "/api/customers/", nil)
+	request := httptest.NewRequest(http.MethodGet, "/api/items/", nil)
+	request.Header.Set("Content-Type", "application/json")
 	request.Header.Set("Accept", "application/json")
 
 	response, err := app.Test(request)
@@ -87,7 +88,7 @@ func TestListCustomer(t *testing.T) {
 	bytes, err := io.ReadAll(response.Body)
 	assert.Nil(t, err)
 
-	responseBody := new(model.WebResponse[[]model.CustomerResponse])
+	responseBody := new(model.WebResponse[[]model.ItemResponse])
 	err = json.Unmarshal(bytes, responseBody)
 	assert.Nil(t, err)
 
@@ -95,88 +96,10 @@ func TestListCustomer(t *testing.T) {
 	assert.Equal(t, 5, len(responseBody.Data))
 }
 
-func TestListCustomerFailed(t *testing.T) {
-	ClearCustomer()
+func TestListItemFailed(t *testing.T) {
+	ClearItem()
 
-	request := httptest.NewRequest(http.MethodGet, "/api/customer/", nil)
-	request.Header.Set("Accept", "application/json")
-
-	response, err := app.Test(request)
-	assert.Nil(t, err)
-
-	bytes, err := io.ReadAll(response.Body)
-	assert.Nil(t, err)
-
-	responseBody := new(model.WebResponse[[]model.CustomerResponse])
-	err = json.Unmarshal(bytes, responseBody)
-	assert.Nil(t, err)
-
-	assert.Equal(t, http.StatusNotFound, response.StatusCode)
-}
-
-func TestGetCustomer(t *testing.T) {
-	ClearCustomer()
-	CreateCustomers(t, 5)
-	customer := GetFirstCustomer(t)
-
-	request := httptest.NewRequest(http.MethodGet, "/api/customers/"+customer.ID, nil)
-	request.Header.Set("Accept", "application/json")
-
-	response, err := app.Test(request)
-	assert.Nil(t, err)
-
-	bytes, err := io.ReadAll(response.Body)
-	assert.Nil(t, err)
-
-	responseBody := new(model.WebResponse[model.CustomerResponse])
-	err = json.Unmarshal(bytes, responseBody)
-	assert.Nil(t, err)
-
-	assert.Equal(t, http.StatusOK, response.StatusCode)
-	assert.Equal(t, customer.ID, responseBody.Data.ID)
-	assert.Equal(t, customer.NationalId, responseBody.Data.NationalId)
-	assert.Equal(t, customer.Name, responseBody.Data.Name)
-	assert.Equal(t, customer.DetailAddress, responseBody.Data.DetailAddress)
-	assert.Equal(t, customer.CreatedAt, responseBody.Data.CreatedAt)
-	assert.Equal(t, customer.UpdatedAt, responseBody.Data.UpdatedAt)
-}
-
-func TestGetCustomerFailed(t *testing.T) {
-	ClearCustomer()
-	CreateCustomers(t, 5)
-	uuid := "e8cc8ec6-5a9c-4cde-9e52-b435d15bb936"
-
-	request := httptest.NewRequest(http.MethodGet, "/api/customers/"+uuid, nil)
-	request.Header.Set("Accept", "application/json")
-
-	response, err := app.Test(request)
-	assert.Nil(t, err)
-
-	bytes, err := io.ReadAll(response.Body)
-	assert.Nil(t, err)
-
-	responseBody := new(model.WebResponse[model.CustomerResponse])
-	err = json.Unmarshal(bytes, responseBody)
-	assert.Nil(t, err)
-
-	assert.Equal(t, http.StatusNotFound, response.StatusCode)
-}
-
-func TestUpdateCustomer(t *testing.T) {
-	ClearCustomer()
-	CreateCustomers(t, 5)
-	customer := GetFirstCustomer(t)
-
-	requestBody := model.UpdateCustomerRequest{
-		ID:            customer.ID,
-		Name:          "Ichsan Ashiddiqi",
-		DetailAddress: "jl.lurus jawa timur, surabaya",
-	}
-
-	bodyJson, err := json.Marshal(requestBody)
-	assert.Nil(t, err)
-
-	request := httptest.NewRequest(http.MethodPut, "/api/customers/"+customer.ID, strings.NewReader(string(bodyJson)))
+	request := httptest.NewRequest(http.MethodGet, "/api/item/", nil)
 	request.Header.Set("Content-Type", "application/json")
 	request.Header.Set("Accept", "application/json")
 
@@ -186,86 +109,172 @@ func TestUpdateCustomer(t *testing.T) {
 	bytes, err := io.ReadAll(response.Body)
 	assert.Nil(t, err)
 
-	responseBody := new(model.WebResponse[model.CustomerResponse])
+	responseBody := new(model.WebResponse[[]model.ItemResponse])
+	err = json.Unmarshal(bytes, responseBody)
+	assert.Nil(t, err)
+
+	assert.Equal(t, http.StatusNotFound, response.StatusCode)
+}
+
+func TestGetItem(t *testing.T) {
+	ClearItem()
+	CreateItems(t, 5)
+	item := GetFirstItem(t)
+
+	request := httptest.NewRequest(http.MethodGet, "/api/items/"+item.ID, nil)
+	request.Header.Set("Content-Type", "application/json")
+	request.Header.Set("Accept", "application/json")
+
+	response, err := app.Test(request)
+	assert.Nil(t, err)
+
+	bytes, err := io.ReadAll(response.Body)
+	assert.Nil(t, err)
+
+	responseBody := new(model.WebResponse[model.ItemResponse])
 	err = json.Unmarshal(bytes, responseBody)
 	assert.Nil(t, err)
 
 	assert.Equal(t, http.StatusOK, response.StatusCode)
-	assert.Equal(t, requestBody.Name, responseBody.Data.Name)
-	assert.Equal(t, requestBody.DetailAddress, responseBody.Data.DetailAddress)
+	assert.Equal(t, item.ItemCode, responseBody.Data.ItemCode)
+	assert.Equal(t, item.ItemName, responseBody.Data.ItemName)
+	assert.Equal(t, item.Type, responseBody.Data.Type)
 	assert.NotNil(t, responseBody.Data.CreatedAt)
 	assert.NotNil(t, responseBody.Data.UpdatedAt)
 	assert.NotNil(t, responseBody.Data.ID)
 }
 
-func TestUpdateCustomerFailed(t *testing.T) {
-	ClearCustomer()
-	CreateCustomers(t, 5)
+func TestGetItemFailed(t *testing.T) {
+	ClearItem()
+	CreateItems(t, 5)
 	uuid := "e8cc8ec6-5a9c-4cde-9e52-b435d15bb936"
 
-	requestBody := model.UpdateCustomerRequest{
-		ID:            uuid,
-		Name:          "Ichsan Ashiddiqi",
-		DetailAddress: "jl.lurus jawa timur, surabaya",
-	}
-
-	bodyJson, err := json.Marshal(requestBody)
-	assert.Nil(t, err)
-
-	request := httptest.NewRequest(http.MethodPut, "/api/customers/"+uuid, strings.NewReader(string(bodyJson)))
+	request := httptest.NewRequest(http.MethodGet, "/api/items/"+uuid, nil)
 	request.Header.Set("Content-Type", "application/json")
 	request.Header.Set("Accept", "application/json")
 
 	response, err := app.Test(request)
 	assert.Nil(t, err)
 
+	bytes, err := io.ReadAll(response.Body)
+	assert.Nil(t, err)
+
+	responseBody := new(model.WebResponse[model.ItemResponse])
+	err = json.Unmarshal(bytes, responseBody)
+	assert.Nil(t, err)
+
 	assert.Equal(t, http.StatusNotFound, response.StatusCode)
 }
 
-func TestDeleteCustomer(t *testing.T) {
-	ClearCustomer()
-	CreateCustomers(t, 5)
-	customer := GetFirstCustomer(t)
+func TestUpdateItem(t *testing.T) {
+	ClearItem()
+	CreateItems(t, 5)
+	item := GetFirstItem(t)
 
-	request := httptest.NewRequest(http.MethodDelete, "/api/customers/"+customer.ID, nil)
+	requestBody := model.UpdateItemRequest{
+		ID:       item.ID,
+		ItemName: "printer",
+		Type:     "hardware",
+	}
+	bodyJson, err := json.Marshal(requestBody)
+	assert.Nil(t, err)
+
+	request := httptest.NewRequest(http.MethodPut, "/api/items/"+item.ID, strings.NewReader(string(bodyJson)))
+	request.Header.Set("Content-Type", "application/json")
 	request.Header.Set("Accept", "application/json")
 
 	response, err := app.Test(request)
+	assert.Nil(t, err)
+
+	bytes, err := io.ReadAll(response.Body)
+	assert.Nil(t, err)
+
+	responseBody := new(model.WebResponse[model.ItemResponse])
+	err = json.Unmarshal(bytes, responseBody)
 	assert.Nil(t, err)
 
 	assert.Equal(t, http.StatusOK, response.StatusCode)
+	assert.Equal(t, requestBody.ItemName, responseBody.Data.ItemName)
+	assert.Equal(t, requestBody.Type, responseBody.Data.Type)
+	assert.NotNil(t, responseBody.Data.CreatedAt)
+	assert.NotNil(t, responseBody.Data.UpdatedAt)
+	assert.NotNil(t, responseBody.Data.ID)
 }
 
-func TestDeleteCustomerFailed(t *testing.T) {
-	ClearCustomer()
-	CreateCustomers(t, 5)
-	uuid := "e8cc8ec6-5a9c-4cde-9e52-b435d15bb936"
+func TestUpdateItemFailed(t *testing.T) {
+	ClearItem()
+	CreateItems(t, 5)
+	item := GetFirstItem(t)
 
-	request := httptest.NewRequest(http.MethodDelete, "/api/customers/"+uuid, nil)
+	requestBody := model.UpdateItemRequest{
+		ID: item.ID,
+		// ItemName: "printer",
+		Type: "hardware",
+	}
+	bodyJson, err := json.Marshal(requestBody)
+	assert.Nil(t, err)
+
+	request := httptest.NewRequest(http.MethodPut, "/api/items/"+item.ID, strings.NewReader(string(bodyJson)))
+	request.Header.Set("Content-Type", "application/json")
 	request.Header.Set("Accept", "application/json")
 
 	response, err := app.Test(request)
 	assert.Nil(t, err)
 
+	bytes, err := io.ReadAll(response.Body)
+	assert.Nil(t, err)
+
+	responseBody := new(model.WebResponse[model.ItemResponse])
+	err = json.Unmarshal(bytes, responseBody)
+	assert.Nil(t, err)
+
+	assert.Equal(t, http.StatusBadRequest, response.StatusCode)
+}
+
+func TestDeleteItem(t *testing.T) {
+	ClearItem()
+	CreateItems(t, 5)
+	item := GetFirstItem(t)
+
+	request := httptest.NewRequest(http.MethodDelete, "/api/items/"+item.ID, nil)
+	request.Header.Set("Content-Type", "application/json")
+	request.Header.Set("Accept", "application/json")
+
+	response, err := app.Test(request)
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusOK, response.StatusCode)
+}
+
+func TestDeleteItemFailed(t *testing.T) {
+	ClearItem()
+	CreateItems(t, 5)
+	uuid := "e8cc8ec6-5a9c-4cde-9e52-b435d15bb936"
+
+	request := httptest.NewRequest(http.MethodDelete, "/api/items/"+uuid, nil)
+	request.Header.Set("Content-Type", "application/json")
+	request.Header.Set("Accept", "application/json")
+
+	response, err := app.Test(request)
+	assert.Nil(t, err)
 	assert.Equal(t, http.StatusNotFound, response.StatusCode)
 }
 
-func TestCreateCustomerBigData(t *testing.T) {
-	ClearCustomer()
+func TestCreateItemBigData(t *testing.T) {
+	ClearItem()
 
 	start := time.Now()
 
 	for i := 0; i < 30; i++ {
-		requestBody := model.CreateCustomerRequest{
-			NationalId:    int64(18071999 + i),
-			Name:          fmt.Sprintf("Muhammad Aditya %d", i),
-			DetailAddress: fmt.Sprintf("jl.kebenaran jawa timur, malang %d", i),
+		requestBody := model.CreateItemRequest{
+			ItemCode: int64(18071999 + i),
+			ItemName: fmt.Sprintf("printer %d", i),
+			Type:     fmt.Sprintf("hardware %d", i),
 		}
 
 		bodyJson, err := json.Marshal(requestBody)
 		assert.Nil(t, err)
 
-		request := httptest.NewRequest(http.MethodPost, "/api/customers/", strings.NewReader(string(bodyJson)))
+		request := httptest.NewRequest(http.MethodPost, "/api/items/", strings.NewReader(string(bodyJson)))
 		request.Header.Set("Content-Type", "application/json")
 		request.Header.Set("Accept", "application/json")
 

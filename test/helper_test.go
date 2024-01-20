@@ -10,12 +10,20 @@ import (
 
 func ClearAll() {
 	ClearCustomer()
+	ClearItem()
 }
 
 func ClearCustomer() {
 	err := db.Where("id is not null").Delete(&entity.Customer{}).Error
 	if err != nil {
-		log.Fatalf("Failed clear user data : %+v", err)
+		log.Fatalf("Failed clear customer data : %+v", err)
+	}
+}
+
+func ClearItem() {
+	err := db.Where("id is not null").Delete(&entity.Item{}).Error
+	if err != nil {
+		log.Fatalf("Failed clear item data : %+v", err)
 	}
 }
 
@@ -32,9 +40,29 @@ func CreateCustomers(t *testing.T, total int) {
 	}
 }
 
+func CreateItems(t *testing.T, total int) {
+	for i := 0; i < total; i++ {
+		item := &entity.Item{
+			ID:       uuid.NewString(),
+			ItemCode: 1234,
+			ItemName: "development",
+			Type:     "service",
+		}
+		err := db.Create(item).Error
+		assert.Nil(t, err)
+	}
+}
+
 func GetFirstCustomer(t *testing.T) *entity.Customer {
 	customer := new(entity.Customer)
 	err := db.First(customer).Error
 	assert.Nil(t, err)
 	return customer
+}
+
+func GetFirstItem(t *testing.T) *entity.Item {
+	item := new(entity.Item)
+	err := db.First(item).Error
+	assert.Nil(t, err)
+	return item
 }
