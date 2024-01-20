@@ -1,0 +1,411 @@
+{
+	"info": {
+		"_postman_id": "2d74c3e5-fa10-47d8-b725-6fdda3a6532c",
+		"name": "assessment-go-source-code-muhammad-aditya",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15473973"
+	},
+	"item": [
+		{
+			"name": "customers",
+			"item": [
+				{
+					"name": "post",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"national_id\": 18071998,\r\n    \"name\": \"Adit\",\r\n    \"detail_address\": \"jl.kebenaran jawa timur, malang\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/customers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/customers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"customers"
+							],
+							"query": [
+								{
+									"key": "national_id",
+									"value": "28071996",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "adit",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/customers/751637e6-6be3-4f26-9eb2-5d08d3cf776e",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"customers",
+								"751637e6-6be3-4f26-9eb2-5d08d3cf776e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Putri Eka Puspitasari\",\r\n    \"detail_address\": \"jl.belok, jawa timur, pasuruan\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/customers/751637e6-6be3-4f26-9eb2-5d08d3cf776e",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"customers",
+								"751637e6-6be3-4f26-9eb2-5d08d3cf776e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/customers/bd0cf7fa-6c9a-4c4a-8833-8496d6a0a462",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"customers",
+								"bd0cf7fa-6c9a-4c4a-8833-8496d6a0a462"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "items",
+			"item": [
+				{
+					"name": "post",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"item_code\": 181923,\r\n    \"item_name\": \"tes3\",\r\n    \"type\": \"tes3\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/items",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/items?item_code=&item_name=&type",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"items"
+							],
+							"query": [
+								{
+									"key": "item_code",
+									"value": ""
+								},
+								{
+									"key": "item_name",
+									"value": ""
+								},
+								{
+									"key": "type",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/items/c48f9033-8b83-4e62-971c-bc0b1c0e03fe",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"items",
+								"c48f9033-8b83-4e62-971c-bc0b1c0e03fe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"item_name\": \"lol\",\r\n    \"type\": \"service\",\r\n    \"item_price\": 160\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/items/c48f9033-8b83-4e62-971c-bc0b1c0e03fe",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"items",
+								"c48f9033-8b83-4e62-971c-bc0b1c0e03fe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/items/f8301135-2029-40b2-9868-9db55c69440d",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"items",
+								"f8301135-2029-40b2-9868-9db55c69440d"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "invoices",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"invoice_number\": \"0001\",\r\n    \"customer_id\": \"751637e6-6be3-4f26-9eb2-5d08d3cf776e\",\r\n    \"subject\": \"winter marketing campaign\",\r\n    \"issued_date\": 1705561215583,\r\n    \"due_date\": 1705560536496,\r\n    \"total_item\": 3,\r\n    \"sub_total\": 1400,\r\n    \"grand_total\": 1540,\r\n    \"status\": \"paid\",\r\n    \"invoice_items\": [\r\n        {\r\n            \"item_id\": \"38e46dfd-e97e-463b-8103-b17e0fbd5a57\",\r\n            \"item_price\": 250,\r\n            \"item_quantity\": 2,\r\n            \"amount\": 500\r\n        },\r\n        {\r\n            \"item_id\": \"3a9c40b2-8a83-4ad0-ad93-ceb2841cf45e\",\r\n            \"item_price\": 150,\r\n            \"item_quantity\": 2,\r\n            \"amount\": 300\r\n        },\r\n        {\r\n            \"item_id\": \"a038c46c-20d5-4eda-9d9c-914c437bec67\",\r\n            \"item_price\": 300,\r\n            \"item_quantity\": 2,\r\n            \"amount\": 600\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/invoices",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"invoices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/invoices/0a3194a3-2e19-4fdc-b52e-88b8bc5a0e4e",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"invoices",
+								"0a3194a3-2e19-4fdc-b52e-88b8bc5a0e4e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/invoices?customer_id=&total_item=&subject=&status=&issued_date=01/18/2024&due_date=01/18/2024",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"invoices"
+							],
+							"query": [
+								{
+									"key": "customer_id",
+									"value": ""
+								},
+								{
+									"key": "total_item",
+									"value": ""
+								},
+								{
+									"key": "subject",
+									"value": ""
+								},
+								{
+									"key": "status",
+									"value": ""
+								},
+								{
+									"key": "issued_date",
+									"value": "01/18/2024",
+									"description": "01/18/2024"
+								},
+								{
+									"key": "due_date",
+									"value": "01/18/2024",
+									"description": "01/18/2024"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"customer_id\": \"751637e6-6be3-4f26-9eb2-5d08d3cf776e\",\r\n    \"subject\": \"autumn marketing campaign\",\r\n    \"issued_date\": 1705318840000,\r\n    \"due_date\": 1705669134000,\r\n    \"total_item\": 3,\r\n    \"sub_total\": 2000,\r\n    \"grand_total\": 2200,\r\n    \"status\": \"paid\",\r\n    \"invoice_items\": [\r\n        {\r\n            \"item_id\": \"38e46dfd-e97e-463b-8103-b17e0fbd5a57\",\r\n            \"item_price\": 350,\r\n            \"item_quantity\": 2,\r\n            \"amount\": 700\r\n        },\r\n        {\r\n            \"item_id\": \"3a9c40b2-8a83-4ad0-ad93-ceb2841cf45e\",\r\n            \"item_price\": 250,\r\n            \"item_quantity\": 2,\r\n            \"amount\": 500\r\n        },\r\n        {\r\n            \"item_id\": \"a038c46c-20d5-4eda-9d9c-914c437bec67\",\r\n            \"item_price\": 400,\r\n            \"item_quantity\": 2,\r\n            \"amount\": 800\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/invoices/0a3194a3-2e19-4fdc-b52e-88b8bc5a0e4e",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"invoices",
+								"0a3194a3-2e19-4fdc-b52e-88b8bc5a0e4e"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "127.0.0.1:3000"
+		}
+	]
+}

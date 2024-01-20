@@ -13,10 +13,6 @@ import (
 )
 
 func TestCreateInvoice(t *testing.T) {
-	// ClearInvoiceItem()
-	// ClearInvoice()
-	// ClearCustomer()
-	// ClearItem()
 	ClearAll()
 
 	CreateCustomers(t, 1)
