@@ -2,10 +2,12 @@ package usecase
 
 import (
 	"assessment-go-source-code-muhammad-aditya/internal/entity"
+	"assessment-go-source-code-muhammad-aditya/internal/gateway/messaging"
 	"assessment-go-source-code-muhammad-aditya/internal/model"
 	"assessment-go-source-code-muhammad-aditya/internal/model/converter"
 	"assessment-go-source-code-muhammad-aditya/internal/repository"
 	"context"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -19,15 +21,17 @@ type CustomerUseCase struct {
 	Log                *logrus.Logger
 	Validate           *validator.Validate
 	CustomerRepository *repository.CustomerRepository
+	CustomerWriter     *messaging.CustomerWriter
 }
 
 func NewCustomerUseCase(db *gorm.DB, logger *logrus.Logger, validate *validator.Validate,
-	customerRepository *repository.CustomerRepository) *CustomerUseCase {
+	customerRepository *repository.CustomerRepository, customerWriter *messaging.CustomerWriter) *CustomerUseCase {
 	return &CustomerUseCase{
 		DB:                 db,
 		Log:                logger,
 		Validate:           validate,
 		CustomerRepository: customerRepository,
+		CustomerWriter:     customerWriter,
 	}
 }
 
@@ -45,6 +49,8 @@ func (c *CustomerUseCase) Create(ctx context.Context, request *model.CreateCusto
 		NationalId:    request.NationalId,
 		Name:          request.Name,
 		DetailAddress: request.DetailAddress,
+		CreatedAt:     time.Now().UnixNano() / int64(time.Millisecond),
+		UpdatedAt:     time.Now().UnixNano() / int64(time.Millisecond),
 	}
 
 	totalNationalId, err := c.CustomerRepository.CountByNationalId(tx, customer)
@@ -65,6 +71,12 @@ func (c *CustomerUseCase) Create(ctx context.Context, request *model.CreateCusto
 
 	if err := tx.Commit().Error; err != nil {
 		c.Log.WithError(err).Error("error creating customer")
+		return nil, fiber.ErrInternalServerError
+	}
+
+	event := converter.CustomerToEvent(customer)
+	if err := c.CustomerWriter.Write(ctx, event); err != nil {
+		c.Log.WithError(err).Error("error writing customer event")
 		return nil, fiber.ErrInternalServerError
 	}
 
@@ -96,6 +108,12 @@ func (c *CustomerUseCase) Update(ctx context.Context, request *model.UpdateCusto
 
 	if err := tx.Commit().Error; err != nil {
 		c.Log.WithError(err).Error("error updating customer")
+		return nil, fiber.ErrInternalServerError
+	}
+
+	event := converter.CustomerToEvent(customer)
+	if err := c.CustomerWriter.Write(ctx, event); err != nil {
+		c.Log.WithError(err).Error("error writing customer event")
 		return nil, fiber.ErrInternalServerError
 	}
 

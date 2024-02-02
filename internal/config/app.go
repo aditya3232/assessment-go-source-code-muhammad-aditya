@@ -3,11 +3,13 @@ package config
 import (
 	"assessment-go-source-code-muhammad-aditya/internal/delivery/http"
 	"assessment-go-source-code-muhammad-aditya/internal/delivery/http/route"
+	"assessment-go-source-code-muhammad-aditya/internal/gateway/messaging"
 	"assessment-go-source-code-muhammad-aditya/internal/repository"
 	"assessment-go-source-code-muhammad-aditya/internal/usecase"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"github.com/segmentio/kafka-go"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
@@ -19,6 +21,7 @@ type BootstrapConfig struct {
 	Log      *logrus.Logger
 	Validate *validator.Validate
 	Config   *viper.Viper
+	Writer   *kafka.Writer
 }
 
 func Bootstrap(config *BootstrapConfig) {
@@ -28,8 +31,11 @@ func Bootstrap(config *BootstrapConfig) {
 	invoiceRepository := repository.NewInvoiceRepository(config.Log)
 	invoiceItemRepository := repository.NewInvoiceItemRepository(config.Log)
 
+	// setup writer
+	customerWriter := messaging.NewCustomerWriter(config.Writer, config.Log)
+
 	// setup use cases
-	customerUseCase := usecase.NewCustomerUseCase(config.DB, config.Log, config.Validate, customerRepository)
+	customerUseCase := usecase.NewCustomerUseCase(config.DB, config.Log, config.Validate, customerRepository, customerWriter)
 	itemUseCase := usecase.NewItemUseCase(config.DB, config.Log, config.Validate, itemRepository)
 	invoiceUseCase := usecase.NewInvoiceUseCase(config.DB, config.Log, config.Validate, invoiceRepository, customerRepository, invoiceItemRepository)
 

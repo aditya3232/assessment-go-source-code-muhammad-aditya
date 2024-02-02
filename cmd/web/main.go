@@ -11,6 +11,7 @@ func main() {
 	db := config.NewDatabase(viperConfig, log)
 	validate := config.NewValidator(viperConfig)
 	app := config.NewFiber(viperConfig)
+	writer := config.NewKafkaWriter(viperConfig, log)
 
 	config.Bootstrap(&config.BootstrapConfig{
 		DB:       db,
@@ -18,6 +19,7 @@ func main() {
 		Log:      log,
 		Validate: validate,
 		Config:   viperConfig,
+		Writer:   writer,
 	})
 
 	webPort := viperConfig.GetInt("web.port")
