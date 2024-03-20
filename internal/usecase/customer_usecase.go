@@ -16,6 +16,8 @@ import (
 	"gorm.io/gorm"
 )
 
+// di struct ini tidak memanggil interface repository customer, karena memang tidak menggunakan interface
+// kalau kode yang mengimplementasikan interface, biasanya struct disini akan memanggil interface repository customer
 type CustomerUseCase struct {
 	DB                 *gorm.DB
 	Log                *logrus.Logger
