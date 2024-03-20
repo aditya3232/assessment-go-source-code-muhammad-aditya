@@ -9,8 +9,8 @@ import (
 )
 
 type CustomerRepository struct {
-	Repository[entity.Customer]
-	Log *logrus.Logger
+	Repository[entity.Customer] // embed generic repository, so we can use all generic method
+	Log                         *logrus.Logger
 }
 
 func NewCustomerRepository(log *logrus.Logger) *CustomerRepository {
