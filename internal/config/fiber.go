@@ -10,6 +10,9 @@ func NewFiber(config *viper.Viper) *fiber.App {
 		AppName:      config.GetString("app.name"),
 		ErrorHandler: NewErrorHandler(),
 		Prefork:      config.GetBool("web.prefork"),
+		IdleTimeout:  config.GetDuration("web.idleTimeout"),
+		ReadTimeout:  config.GetDuration("web.readTimeout"),
+		WriteTimeout: config.GetDuration("web.writeTimeout"),
 	})
 
 	return app
