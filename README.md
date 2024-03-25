@@ -1,10 +1,12 @@
-# Description
+# Deskripsi
 
-This is golang clean architecture.
+Ini adalah Layered Architecture kalau dilihat secara struktur partisinya
 
-## Architecture
+## Architecture 
 
-![Clean Architecture](architecture.png)
+![Layered Architecture](architecture.png)
+
+## Berikut adalah penjelasan dari setiap layer yang ada di dalam Layered Architecture ini:
 
 1. Sistem eksternal melakukan permintaan (HTTP, gRPC, Messaging, dll) ke delivery, contoh permintaan dari sistem eksternal adalah request HTTP dari client, request gRPC dari client, atau baca pesan dari message broker
 2. delivery akan mengakses model request untuk setiap request yang masuk, dan memanggil model response, untuk mengembalikan response data dari use case ke sistem eksternal
@@ -35,15 +37,15 @@ This is golang clean architecture.
 
 ## Configuration
 
-All configuration is in `config.json` file.
+Semua konfigurasi add di file `config.json`.
 
 ## API Spec
 
-All API Spec or postman collection is in `api` folder.
+Semua api spec ada di folder `api-spec`.
 
 ## Database Migration
 
-All database migration is in `db/migrations` folder.
+Semua database migration ada di folder `db/migrations`.
 
 ### Create Migration
 
