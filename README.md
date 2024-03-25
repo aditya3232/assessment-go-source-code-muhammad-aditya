@@ -6,17 +6,17 @@ This is golang clean architecture.
 
 ![Clean Architecture](architecture.png)
 
-1. External system perform request (HTTP, gRPC, Messaging, etc)
-2. The Delivery creates various Model from request data
-3. The Delivery calls Use Case, and execute it using Model data
-4. The Use Case create Entity data for the business logic
-5. The Use Case calls Repository, and execute it using Entity data
-6. The Repository use Entity data to perform database operation
-7. The Repository perform database operation to the database
-8. The Use Case create various Model for Gateway or from Entity data
-9. The Use Case calls Gateway, and execute it using Model data
-10. The Gateway using Model data to construct request to external system 
-11. The Gateway perform request to external system (HTTP, gRPC, Messaging, etc)
+1. Sistem eksternal melakukan permintaan (HTTP, gRPC, Messaging, dll) ke delivery, contoh permintaan dari sistem eksternal adalah request HTTP dari client, request gRPC dari client, atau baca pesan dari message broker
+2. delivery akan mengakses model request untuk setiap request yang masuk, dan memanggil model response, untuk mengembalikan response data dari use case ke sistem eksternal
+3. delivery akan memanggil use case, didalam use case berisi bisnis logic (transaksi, validasi, dll) 
+4. use case membuat instance baru dari entity dan mengisi data entity dari request model
+5. use case memanggil repository, untuk menyimpan data instance entity yg telah dibuat ke database
+6. repository menggunakan data entity untuk melakukan operasi database
+7. repository melakukan operasi basis data ke database
+8. use case memberikan response yang sesuai berdasarkan model response
+9. lalu jika ada data yang perlu dikirim ke sistem eksternal, maka use case akan memanggil gateway, dan gateway akan mengirimkan data ke sistem eksternal
+10. gateway juga akan mengaksesl model untuk data yang dikirim ke sistem eksternal
+11. gateway akan melakukan permintaan mengirimkan data ke sistem eksternal
 
 ## Tech Stack
 

@@ -28,7 +28,7 @@ func TestCreateCustomer(t *testing.T) {
 	request.Header.Set("Content-Type", "application/json")
 	request.Header.Set("Accept", "application/json")
 
-	response, err := app.Test(request)
+	response, err := app.Test(request) // tes menggunakan fiber
 	assert.Nil(t, err)
 
 	bytes, err := io.ReadAll(response.Body)

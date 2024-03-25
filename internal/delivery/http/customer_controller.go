@@ -23,6 +23,7 @@ func NewCustomerController(useCase *usecase.CustomerUseCase, log *logrus.Logger)
 
 func (c *CustomerController) Create(ctx *fiber.Ctx) error {
 	request := new(model.CreateCustomerRequest)
+	// mengikuti struct tag json, xml, form, kalau pakai body, harus mapping manual ke struct
 	if err := ctx.BodyParser(request); err != nil {
 		c.Log.WithError(err).Error("error parsing request body")
 		return fiber.ErrBadRequest
